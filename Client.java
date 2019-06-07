@@ -13,10 +13,6 @@ public class Client extends UnicastRemoteObject implements ClientIF, Runnable{
 		this.name = name;
 		this.server = server;
 		server.registerClient(this, this.name);
-		System.out.println("방장이 start를 입력하면 게임이 시작됩니다.");
-//		System.out.println("시작하려면 엔터를 입력하시오.");
-//		String a = scan.nextLine();
-//		System.out.println("제시어 : "+server.checkword());
 	}
 
 	@Override

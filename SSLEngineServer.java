@@ -1,42 +1,37 @@
 
-
-import java.io.*; 
+import java.*;
+import java.io.*;
 import java.net.MalformedURLException;
+import java.nio.ByteBuffer;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.security.*;
-import java.util.Scanner;
-
 import javax.net.ssl.*;
+import java.org
 
-public class SSLSocketServer {
-	
-	public SSLSocketServer() {
-//		try {
-//			Naming.rebind("rmi://localhost:1099/kang", new ChatServer());
-//		}catch(Exception e) {
-//			System.out.println("Trouble: "+e);
-//		}
-	}
-	
-
+public class SSLEngineServer {
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NoSuchAlgorithmException {
-		Scanner scanner = new Scanner(System.in);
 		final KeyStore ks;
 		final KeyManagerFactory kmf;
 		final SSLContext sc;
-		SSLContext sslCtx = SSLContext.getDefault();
-		
+		SSLSession sslSession;
 		final String runRoot = "C:/Users/opo/eclipse-workspace/NetProgramming/bin/";  // root change : your system root
+//		new SSLSocketServer();
 		SSLServerSocketFactory ssf = null;
 		SSLServerSocket s = null;
+		
 		SSLSocket c = null;
+//		SSLEngine e = null;
 		
 		BufferedWriter w = null;
 		BufferedReader r = null;
 		
+//		if (args.length != 1) {
+//			System.out.println("Usage: Classname Port");
+//			System.exit(1);
+//		}
 		int sPort = Integer.parseInt(args[0]);
-		String sName = args[1];
+		
 		String ksName = runRoot+".keystore/SSLSocketServerKey3";
 
 		char keyStorePass[] = "jkr124".toCharArray();
@@ -48,33 +43,65 @@ public class SSLSocketServer {
 			kmf.init(ks,  keyPass);
 			sc = SSLContext.getInstance("TLS");
 			sc.init(kmf.getKeyManagers(), null, null);
-			
+///////////////////////////			 SSLEngine
 			SSLEngine sslEngine = sc.createSSLEngine();
-			sslEngine.setUseClientMode(false);
-			/* SSLEngine
-			sslEngine = sslContext.createSSLEngine();
 			sslEngine.setUseClientMode(false);
 			sslSession = sslEngine.getSession();
 			
-			dummy = ByteBuffer.allocate(0);
-			outNetBuffer = ByteBuffer.allocate(this.getNetBufferSize());
-			inAppBuffer = ByteBuffer.allocate(this.getAppBufferSize());
-			*/
+			int bdummy = sslEngine.getSession().getApplicationBufferSize();
+			ByteBuffer outNetBuffer = ByteBuffer.allocate(bdummy);
+			ByteBuffer inAppBuffer = ByteBuffer.allocate(bdummy);
+			sslEngine.wrap
+//			*/
 			
 			/* SSLServerSocket */
 			
 			//System.out.println("started at " +mServer+"and use default port(1099),Service name : "+mServName);
 			
 			ssf = sc.getServerSocketFactory();
+			System.out.println("aaaaaaaaaaaaaaaa");
 			s = (SSLServerSocket)ssf.createServerSocket(sPort);
 			printServerSocketInfo(s);
-			c = (SSLSocket)s.accept();
 			
-			Naming.rebind("rmi://localhost:1099/"+sName, new Server());
+			//Engine = (SSLEngine)sc.getClientSessionContext();
+			Engine.setUseClientMode(true);
+			System.out.println("bbbbbbbbbbbbb");
 			
+			Naming.rebind("rmi://localhost:1099/kang", new Server());
 			printSocketInfo(c);
 			System.out.println("끝말잇기 방이 개설됐습니다.");
+//			while(true) {
+//                Socket socket = serverSocket.accept();
+//                new ChatServerProcessThread(socket, listWriters).start();
+//            }
+			w = new BufferedWriter(new OutputStreamWriter(c.getOutputStream()));
+			r = new BufferedReader(new InputStreamReader(c.getInputStream()));
 			
+			String m = "SSLSocket based reverse echo, Type some words. exit '.'";
+			w.write(m,0,m.length());
+			w.newLine();
+			w.flush();
+			/////////////////////////////////////*******************
+			
+			
+		//	while((m = r.readLine())!=null) {
+				//				if(m.equals(".")) break;
+//				char[] a = m.toCharArray();
+//				int n = a.length;
+//				for(int i=0; i<n/2;i++) {
+//					char t = a[i];
+//					a[i] = a[n-1-i];
+//					a[n-i-1] = t;
+//				}
+//				w.write(a,0,n);
+//				w.newLine();
+//				w.flush();
+//			}
+//			w.close();
+//			r.close();
+//			s.close();
+//			c.close();
+//		
 		} catch (SSLException se) {
 			System.out.println("SSL problem, exit~");
 			try {
@@ -83,7 +110,7 @@ public class SSLSocketServer {
 				s.close();
 				c.close();
 			} catch (IOException i) {
-		}
+			}
 		} catch (Exception e) {
 			System.out.println("What?? exit~");
 			try {
@@ -120,4 +147,5 @@ public class SSLSocketServer {
 		System.out.println("   Want client authentication = "+s.getWantClientAuth());
 		System.out.println("   Use client mode = "+s.getUseClientMode());
 	}
+
 }

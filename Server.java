@@ -23,21 +23,24 @@ public class Server extends UnicastRemoteObject implements ServerIF{
 
 	
 	public void registerClient(ClientIF client, String name) throws RemoteException {
-		this.clientlist.add(client);
-		if(clientlist.size() == 1)
-			last_turn = name;
-		
-//		for(int i=0;i<clientlist.size();i++) {
-//			
-//		}
-		System.out.print("\n현재 참여자 목록 : ");
-		for(int i=0;i<clientlist.size();i++) {
-			System.out.print(clientlist.get(i).getname()+"  ");
-			clientlist.get(i).recive(clientlist.get(clientlist.size()-1).getname()+"이(가) 참여하였습니다.");
-		
-		}
-		
-				
+	      if(start==0) {
+	         this.clientlist.add(client);
+	         client.recive("방장이 start를 입력하면 게임이 시작됩니다.");
+	      }
+	      else {
+	         this.clientlist2.add(client);
+	         client.recive("게임이 진행중입니다. 현재 게임이 끝나면 자동으로 참여합니다.");
+	      }
+	      
+	      if(clientlist.size() == 1)
+	         last_turn = name;
+	      
+	      System.out.print("\n현재 참여자 목록 : ");
+	      for(int i=0;i<clientlist.size();i++) {
+	         System.out.print(clientlist.get(i).getname()+"  ");
+	         clientlist.get(i).recive(clientlist.get(clientlist.size()-1).getname()+"이(가) 참여하였습니다.");
+	      
+	      }
 		
 	}
 	
